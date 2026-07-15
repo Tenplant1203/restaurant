@@ -40,3 +40,83 @@ Install dependencies:
 ```bash
 uv sync
 ```
+
+Activate the virtual environment:
+
+```bash
+source .venv/bin/activate
+```
+
+Apply database migrations:
+
+```bash
+python manage.py migrate
+```
+
+Check the Django project configuration:
+
+```bash
+python manage.py check
+```
+
+Start the development server:
+
+```bash
+python manage.py runserver
+```
+
+Open <http://127.0.0.1:8000/> in a browser.
+
+## Tests
+
+Run tests:
+
+```bash
+uv run pytest
+```
+
+Run tests with coverage:
+
+```bash
+uv run coverage run -m pytest
+uv run coverage report
+```
+
+## Development and CI commands
+
+Install the locked dependencies:
+
+```bash
+uv sync --locked
+```
+
+Check the Django project:
+
+```bash
+uv run python manage.py check
+```
+
+Check for model changes without migration files:
+
+```bash
+uv run python manage.py makemigrations --check --dry-run
+```
+
+Check code formatting:
+
+```bash
+uv run black --check .
+```
+
+Run the linter:
+
+```bash
+uv run pylint Restaurant RestaurantApp
+```
+
+Run tests with coverage:
+
+```bash
+uv run coverage run -m pytest
+uv run coverage report
+```
