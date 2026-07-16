@@ -1,41 +1,58 @@
-# Restaurant
+# Fancy Restaurant
 
-This is the course project for SA01.
+This is the SA01 course project: a Django-based restaurant reservation system.
 
-## Project outline
+The application allows a user to request a restaurant table by specifying the
+number of guests, a desired date, and a desired timeslot. The system checks
+table availability, creates a reservation when possible, and suggests a
+nearby available timeslot when the requested slot is unavailable.
 
-This project is a Django-based restaurant reservation system.
+## Project documentation
 
-The user can book a table in a restaurant. The user enters the number of guests, chooses a desired date and timeslot, and confirms the booking.
+The original project proposal was submitted as Exercise 1 and Exercise 2.
+The current project documentation is maintained here:
 
-If the desired timeslot is not available, the system suggests the closest available timeslot.
+- [Functional specification](docs/functional-spec.md)
+- [Technical specification](docs/technical-spec.md)
 
-## Main data entities
+The functional specification describes the user-facing reservation flow. The
+technical specification describes the implementation approach and the current
+technical state of the project.
 
-- User
-- RestaurantTable
-- Reservation
+## Planned user flow
 
-## Development environment
+1. The user enters the number of guests, date, and desired timeslot.
+2. The system checks the availability of suitable restaurant tables.
+3. If a table is available, the system creates the reservation.
+4. If the requested timeslot is unavailable, the system suggests the closest
+   available timeslot on the same day.
+5. If the whole day is booked, the system suggests the closest available slot
+   on a nearby day.
+6. The system displays the result of the reservation request.
 
-This project uses:
+User authentication may be used to identify returning users. For guests, the
+reservation flow can request the necessary name or contact information.
 
-- Python 3.11
-- Django
-- uv
+## Technology
 
-## Development tools
+- Python 3.11+
+- Django 5
+- SQLite for local development
+- uv for dependency and virtual-environment management
+- pytest and pytest-django for testing
+- coverage.py for test coverage
+- Black for formatting
+- Pylint and pylint-django for linting
 
-This project uses the following tools:
+## Project status
 
-- Black for code formatting
-- Pylint for linting
-- pytest for testing
-- coverage.py for coverage measurement
+The development environment and initial Django project/app structure are in
+place. The reservation models, forms, views, templates, dynamic interactions,
+and application tests are being developed incrementally.
 
 ## Setup
 
-Install dependencies:
+Install the project dependencies with uv:
 
 ```bash
 uv sync
@@ -47,7 +64,7 @@ Activate the virtual environment:
 source .venv/bin/activate
 ```
 
-Apply database migrations:
+Apply the database migrations:
 
 ```bash
 python manage.py migrate
@@ -59,64 +76,59 @@ Check the Django project configuration:
 python manage.py check
 ```
 
-Start the development server:
+## Run the development server
 
 ```bash
 python manage.py runserver
 ```
 
-Open <http://127.0.0.1:8000/> in a browser.
+Then open <http://127.0.0.1:8000/> in a browser.
 
-## Tests
+## Testing
 
-Run tests:
+Run the test suite:
 
 ```bash
-uv run pytest
+pytest
 ```
 
-Run tests with coverage:
+Run the test suite with coverage:
 
 ```bash
-uv run coverage run -m pytest
-uv run coverage report
+coverage run -m pytest
+coverage report
 ```
 
-## Development and CI commands
-
-Install the locked dependencies:
+Generate an HTML coverage report if needed:
 
 ```bash
-uv sync --locked
+coverage html
 ```
 
-Check the Django project:
+## Code quality
+
+Check formatting with Black:
 
 ```bash
-uv run python manage.py check
+black --check .
 ```
 
-Check for model changes without migration files:
+Run Pylint on the Django project and application:
 
 ```bash
-uv run python manage.py makemigrations --check --dry-run
+pylint Restaurant RestaurantApp
 ```
 
-Check code formatting:
+## Project structure
 
-```bash
-uv run black --check .
-```
-
-Run the linter:
-
-```bash
-uv run pylint Restaurant RestaurantApp
-```
-
-Run tests with coverage:
-
-```bash
-uv run coverage run -m pytest
-uv run coverage report
+```text
+.
+├── Restaurant/              # Django project configuration
+├── RestaurantApp/           # Restaurant reservation application
+├── docs/                    # Project documentation
+├── tests/                   # Project-level tests
+├── manage.py                # Django management entry point
+├── pyproject.toml           # Project and development-tool configuration
+├── pytest.ini               # pytest-django configuration
+└── uv.lock                  # Locked Python dependencies
 ```
