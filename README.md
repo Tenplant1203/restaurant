@@ -118,17 +118,3 @@ Run Pylint on the Django project and application:
 ```bash
 pylint Restaurant RestaurantApp
 ```
-
-## Project structure
-
-```text
-.
-├── Restaurant/              # Django project configuration
-├── RestaurantApp/           # Restaurant reservation application
-├── docs/                    # Project documentation
-├── tests/                   # Project-level tests
-├── manage.py                # Django management entry point
-├── pyproject.toml           # Project and development-tool configuration
-├── pytest.ini               # pytest-django configuration
-└── uv.lock                  # Locked Python dependencies
-```
