@@ -1,23 +1,51 @@
-# Exercise 2: Project Proposal Sketch
+# Technical Specification
 
-## Main data entities
+## Database
 
-what kinds of objects or tables will the system need?
+The project uses Django ORM with SQLite for local development.
 
-- User
-- RestaurantTable
-- Reservation
+## Models
 
-## Main user flow
+### User
 
-Main user actions (ex01): what can the user do in the system?
-Main user flow (ex02): how does the user interact with the system?
+`User` stores a user's name, login, and password.
 
-1. Input data of a reservation (the number of guests, desired date, desired timeslot)
-   If the user is logged in, the system use username registered
-   If the user isn't logged in, the system requires input of username
-2. If the user pushed button, the system checks situation of tables
-3. If there is a available table, the system assign suitable (by input data) reservation
-4. If there is no a available table in given timeslot, the system suggest the closest available timeslot on the given day
-5. If there is no a available table in all day, the system suggest the closest available timeslot on the near day
-6. Finally, if the reservation is success, the system shows a success message.
+- `name`: user name
+- `login`: unique login name
+- `password`: password value
+
+### RestaurantTable
+
+`RestaurantTable` stores the tables in the restaurant.
+
+- `number`: unique table number
+- `capacity`: number of seats
+
+### Reservation
+
+`Reservation` stores a table reservation.
+
+- `user`: user who made the reservation
+- `table`: reserved restaurant table
+- `guest_count`: number of guests
+- `date`: reservation date
+- `start_time`: reservation start time
+- `end_time`: reservation end time
+- `status`: `pending`, `confirmed`, or `cancelled`
+
+New reservations have the `pending` status.
+
+## Relationships
+
+- One user can have many reservations.
+- One table can have many reservations.
+- A reservation belongs to one user and one table.
+
+## String representation
+
+Each model has a `__str__()` method for readable output in the Django admin.
+
+## Migration
+
+The initial database schema is stored in
+`RestaurantApp/migrations/0001_initial.py`.
