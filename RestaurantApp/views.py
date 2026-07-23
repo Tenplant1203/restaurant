@@ -7,16 +7,20 @@ def home(request):
     message = "\n".join(
         ["Fancy Restaurant", "", "Available pages:", "- /tables/", "- /reservations/"]
     )
-    return HttpResponse(message)
+    return HttpResponse(message, content_type="text/plain")
 
 
 def table_list(request):
     tables = RestaurantTable.objects.all()
     table_details = "\n".join(str(table) for table in tables)
-    return HttpResponse(table_details or "No tables available.")
+    return HttpResponse(
+        table_details or "No tables available.", content_type="text/plain"
+    )
 
 
 def reservation_list(request):
     reservations = Reservation.objects.all()
     reservation_details = "\n".join(str(reservation) for reservation in reservations)
-    return HttpResponse(reservation_details or "No reservations available.")
+    return HttpResponse(
+        reservation_details or "No reservations available.", content_type="text/plain"
+    )

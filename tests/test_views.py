@@ -11,6 +11,7 @@ def test_home_returns_application_name(client):
     response = client.get(reverse("home"))
 
     assert response.status_code == 200
+    assert response["Content-Type"].startswith("text/plain")
     assert "Fancy Restaurant" in response.content.decode()
 
 
@@ -22,6 +23,7 @@ def test_table_list_returns_restaurant_tables(client):
     response = client.get(reverse("table-list"))
 
     assert response.status_code == 200
+    assert response["Content-Type"].startswith("text/plain")
     assert "Table 1 (2 seats)" in response.content.decode()
     assert "Table 2 (4 seats)" in response.content.decode()
 
@@ -42,4 +44,5 @@ def test_reservation_list_returns_reservations(client):
     response = client.get(reverse("reservation-list"))
 
     assert response.status_code == 200
+    assert response["Content-Type"].startswith("text/plain")
     assert "John, 2 people, Table 1 (4 seats)" in response.content.decode()
