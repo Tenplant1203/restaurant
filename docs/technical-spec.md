@@ -1,5 +1,18 @@
 # Technical Specification
 
+## Application API
+
+The first version of the application provides the following read-only URLs.
+
+| URL | Method | URL arguments | Request parameters | Response |
+| --- | --- | --- | --- | --- |
+| `/` | `GET` | None | None | Plain-text home page with the application name and available pages. |
+| `/tables/` | `GET` | None | None | Plain-text list of restaurant tables, or a message when no tables exist. |
+| `/reservations/` | `GET` | None | None | Plain-text list of reservations, or a message when no reservations exist. |
+
+Reservation creation and user input processing are not included yet. They will
+be added in a later exercise with forms and `POST` requests.
+
 ## Database
 
 The project uses Django ORM with SQLite for local development.

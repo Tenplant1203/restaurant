@@ -18,6 +18,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from RestaurantApp import views
+
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", views.home, name="home"),
+    path("tables/", views.table_list, name="table-list"),
+    path("reservations/", views.reservation_list, name="reservation-list"),
 ]
