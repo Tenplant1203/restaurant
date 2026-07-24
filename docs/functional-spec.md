@@ -27,3 +27,15 @@ This app allows the user to book a table in a restaurant.
 - If the user books a table successfully, the system shows a success message.
 - The user has to input a unique combination of login/password.
 - If the user is logged in, there is no need to ask for the user name again.
+
+## Reservation rules
+
+- Reservations are available in one-hour timeslots from 11:00 to 21:00.
+- A reservation must be for one or more guests and within the next 14 days.
+- The system assigns the smallest available table that can accommodate the party.
+- If the requested timeslot is unavailable, the system suggests the closest
+  available timeslot on the same day. If the day is fully booked, it displays
+  a full-booked message.
+- Registered users can log in. Their name is populated from the session and
+  cannot be changed in the reservation form. Guests enter a name for each
+  reservation.

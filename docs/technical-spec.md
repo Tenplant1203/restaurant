@@ -2,16 +2,22 @@
 
 ## Application API
 
-The first version of the application provides the following read-only URLs.
+The application provides forms for registration, login, and reservation
+creation.
 
 | URL | Method | URL arguments | Request parameters | Response |
 | --- | --- | --- | --- | --- |
-| `/` | `GET` | None | None | Plain-text home page with the application name and available pages. |
+| `/` | `GET` | None | None | HTML home page with the reservation form. |
 | `/tables/` | `GET` | None | None | Plain-text list of restaurant tables, or a message when no tables exist. |
 | `/reservations/` | `GET` | None | None | Plain-text list of reservations, or a message when no reservations exist. |
+| `/reservations/` | `POST` | None | Reservation form data | Creates a confirmed reservation or redisplays the form with an error or alternative timeslot. |
+| `/register/` | `GET`, `POST` | None | Registration form data on `POST` | Displays registration form; creates a user, logs the user in, and redirects home on success. |
+| `/login/` | `GET`, `POST` | None | Login form data on `POST` | Displays login form; stores the user's login in the session and redirects home on success. |
+| `/logout/` | `POST` | None | None | Removes the logged-in user from the session and redirects home. |
 
-Reservation creation and user input processing are not included yet. They will
-be added in a later exercise with forms and `POST` requests.
+Passwords are stored with Django password hashing. The session stores a
+logged-in user's unique `login`, which is used to retrieve the user for a
+reservation.
 
 ## Database
 
@@ -46,7 +52,7 @@ The project uses Django ORM with SQLite for local development.
 - `end_time`: reservation end time
 - `status`: `pending`, `confirmed`, or `cancelled`
 
-New reservations have the `pending` status.
+Reservations created through the reservation form have the `confirmed` status.
 
 ## Relationships
 
