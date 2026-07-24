@@ -23,6 +23,9 @@ from RestaurantApp import views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.home, name="home"),
+    path("login/", views.login, name="login"),
+    path("logout/", views.logout, name="logout"),
+    path("register/", views.register, name="register"),
     path("tables/", views.table_list, name="table-list"),
     path("reservations/", views.reservation_list, name="reservation-list"),
 ]
