@@ -1,8 +1,11 @@
 <!doctype html>
 <html lang="en">
 <head>
+  {% load static %}
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Fancy Restaurant</title>
+  <link rel="stylesheet" href="{% static 'RestaurantApp/style.css' %}">
 </head>
 <body>
   <header>
@@ -23,7 +26,7 @@
     </nav>
   </header>
   {% if messages %}
-    <ul>
+    <ul class="messages">
       {% for message in messages %}
         <li>{{ message }}</li>
       {% endfor %}
