@@ -19,6 +19,13 @@ Passwords are stored with Django password hashing. The session stores a
 logged-in user's unique `login`, which is used to retrieve the user for a
 reservation.
 
+## User interface
+
+The application uses Django templates for page structure and an external
+static CSS file for presentation. The shared base template loads the stylesheet
+and provides a responsive viewport; the CSS keeps the navigation and forms
+readable on desktop and mobile screens.
+
 ## Database
 
 The project uses Django ORM with SQLite for local development.

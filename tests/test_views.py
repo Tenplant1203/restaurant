@@ -133,6 +133,18 @@ def test_home_renders_the_reservation_form(client):
 
 
 @pytest.mark.django_db
+def test_home_loads_the_responsive_stylesheet(client):
+    response = client.get(reverse("home"))
+    content = response.content.decode()
+
+    assert (
+        '<meta name="viewport" content="width=device-width, initial-scale=1">'
+        in content
+    )
+    assert 'href="/static/RestaurantApp/style.css"' in content
+
+
+@pytest.mark.django_db
 def test_table_list_returns_restaurant_tables(client):
     RestaurantTable.objects.create(number=1, capacity=2)
     RestaurantTable.objects.create(number=2, capacity=4)
