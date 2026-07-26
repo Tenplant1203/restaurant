@@ -30,6 +30,8 @@ This app allows the user to book a table in a restaurant.
 
 ## Reservation rules
 
+- Reservation dates and timeslots are interpreted in the restaurant's local
+  timezone, Asia/Tokyo.
 - Reservations are available in one-hour timeslots from 11:00 to 21:00.
 - A reservation must be for one or more guests and within the next 14 days.
 - The system assigns the smallest available table that can accommodate the party.

@@ -20,6 +20,10 @@ Passwords are stored with Django password hashing. The session stores a
 logged-in user's unique `login`, which is used to retrieve the user for a
 reservation.
 
+Reservation dates and timeslots use the restaurant's local timezone,
+`Asia/Tokyo`. Django's timezone-aware date and time helpers therefore apply
+the Japan timezone when deciding whether a same-day timeslot has started.
+
 ## User interface
 
 The application uses Django templates for page structure and an external
