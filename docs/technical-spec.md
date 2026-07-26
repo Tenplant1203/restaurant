@@ -53,7 +53,7 @@ application server. WhiteNoise serves collected static files. Render provides
 debug mode and configure allowed hosts. `SECRET_KEY` and `DATABASE_URL` are
 managed as Render environment variables. Render terminates HTTPS, so production
 settings trust its `X-Forwarded-Proto: https` header to retain the request
-scheme for CSRF validation.
+scheme for CSRF validation and trust the generated `onrender.com` origin.
 
 The application has no uploaded files or images, so media-file storage is not
 configured.

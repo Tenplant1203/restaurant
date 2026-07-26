@@ -38,6 +38,9 @@ ALLOWED_HOSTS = [os.environ["RENDER_EXTERNAL_HOSTNAME"]] if not DEBUG else []
 
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    CSRF_TRUSTED_ORIGINS = [
+        f"https://{os.environ['RENDER_EXTERNAL_HOSTNAME']}",
+    ]
 
 
 # Application definition

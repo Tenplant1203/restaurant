@@ -132,7 +132,8 @@ Render automatically provides `RENDER` and `RENDER_EXTERNAL_HOSTNAME`.
 The application uses them to set `DEBUG=False` and `ALLOWED_HOSTS` in
 production. Render terminates HTTPS and forwards `X-Forwarded-Proto`; Django
 uses that trusted header to preserve the HTTPS scheme for CSRF-protected POST
-requests.
+requests. Django also trusts the service's generated `onrender.com` origin for
+these requests.
 
 ### Render commands
 

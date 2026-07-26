@@ -56,6 +56,29 @@ def test_render_settings_trust_render_forwarded_https_scheme():
     assert result.stdout.strip() == "('HTTP_X_FORWARDED_PROTO', 'https')"
 
 
+def test_render_settings_trust_render_external_origin():
+    environment = os.environ | {
+        "RENDER": "1",
+        "RENDER_EXTERNAL_HOSTNAME": "restaurant.example.onrender.com",
+        "SECRET_KEY": "test-secret-key",
+    }
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "from Restaurant import settings; print(settings.CSRF_TRUSTED_ORIGINS)",
+        ],
+        check=False,
+        capture_output=True,
+        env=environment,
+        text=True,
+    )
+
+    assert result.returncode == 0
+    assert result.stdout.strip() == "['https://restaurant.example.onrender.com']"
+
+
 @override_settings(SECURE_PROXY_SSL_HEADER=("HTTP_X_FORWARDED_PROTO", "https"))
 def test_forwarded_https_login_post_passes_csrf_validation(db):
     user = User.objects.create(
