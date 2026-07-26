@@ -13,8 +13,8 @@
     <h1>Fancy Restaurant</h1>
     <nav aria-label="Main navigation">
       <a href="{% url 'home' %}">Home</a>
-      <a href="{% url 'reservation-list' %}">Reservations</a>
       {% if logged_in_user %}
+        <a href="{% url 'reservation-list' %}">Reservations</a>
         <span>Hi, {{ logged_in_user.name }}!</span>
         <form method="post" action="{% url 'logout' %}">
           {% csrf_token %}

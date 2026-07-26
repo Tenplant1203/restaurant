@@ -43,3 +43,5 @@ This app allows the user to book a table in a restaurant.
 - Registered users can log in. Their name is populated from the session and
   cannot be changed in the reservation form. Guests enter a name for each
   reservation.
+- Logged-in users can open the Reservations page to view only their own
+  reservations. Users who are not logged in are directed to the login page.

@@ -1,0 +1,14 @@
+{% extends "RestaurantApp/base.html" %}
+
+{% block main %}
+  <h2>Your Reservations</h2>
+  {% if reservations %}
+    <ul>
+      {% for reservation in reservations %}
+        <li>{{ reservation }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>You have no reservations.</p>
+  {% endif %}
+{% endblock %}

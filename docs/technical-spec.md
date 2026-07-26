@@ -9,7 +9,7 @@ creation.
 | --- | --- | --- | --- | --- |
 | `/` | `GET` | None | None | HTML home page with the reservation form. |
 | `/tables/` | `GET` | None | None | Plain-text list of restaurant tables, or a message when no tables exist. |
-| `/reservations/` | `GET` | None | None | Plain-text list of reservations, or a message when no reservations exist. |
+| `/reservations/` | `GET` | None | None | HTML page listing the logged-in user's reservations, newest first. Redirects to `/login/` when no logged-in user exists. |
 | `/reservations/` | `POST` | None | Reservation form data | Creates a confirmed reservation or redisplays the form with an error or alternative timeslot. |
 | `/availability/` | `POST` | None | Guest count, date, and timeslot | Returns an HTML fragment describing availability; does not create a reservation. |
 | `/register/` | `GET`, `POST` | None | Registration form data on `POST` | Displays registration form; creates a user, logs the user in, and redirects home on success. |
@@ -26,6 +26,10 @@ The application uses Django templates for page structure and an external
 static CSS file for presentation. The shared base template loads the stylesheet
 and provides a responsive viewport; the CSS keeps the navigation and forms
 readable on desktop and mobile screens.
+
+The shared navigation shows the Reservations link only for logged-in users.
+`reservations.html` extends the base template and renders the logged-in user's
+reservations, or an empty-state message when they have none.
 
 The reservation form uses HTMX for one progressive-enhancement interaction.
 Changing the guest count, date, or timeslot sends a `POST` request to

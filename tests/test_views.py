@@ -52,6 +52,20 @@ def test_login_get_renders_the_login_form(client):
 
 
 @pytest.mark.django_db
+@pytest.mark.parametrize("url_name", ["login", "register"])
+def test_login_and_register_keep_logged_in_navigation(client, url_name):
+    user = User.objects.create(name="Alice", login="alice", password="hash")
+    session = client.session
+    session["user_login"] = user.login
+    session.save()
+
+    response = client.get(reverse(url_name))
+
+    assert 'href="/reservations/">Reservations</a>' in response.content.decode()
+    assert 'action="/logout/"' in response.content.decode()
+
+
+@pytest.mark.django_db
 def test_logout_removes_the_login_session(client):
     session = client.session
     session["user_login"] = "alice"
@@ -282,8 +296,48 @@ def test_table_list_returns_restaurant_tables(client):
 
 
 @pytest.mark.django_db
-def test_reservation_list_returns_reservations(client):
+def test_reservation_list_redirects_guests_to_login(client):
+    response = client.get(reverse("reservation-list"))
+
+    assert response.status_code == 302
+    assert response.url == reverse("login")
+
+
+@pytest.mark.django_db
+def test_home_hides_reservations_navigation_for_guests(client):
+    response = client.get(reverse("home"))
+
+    assert 'href="/reservations/">Reservations</a>' not in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_home_shows_reservations_navigation_for_logged_in_users(client):
     user = User.objects.create(name="John", login="john", password="password")
+    session = client.session
+    session["user_login"] = user.login
+    session.save()
+
+    response = client.get(reverse("home"))
+
+    assert 'href="/reservations/">Reservations</a>' in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_reservation_list_shows_an_empty_message(client):
+    user = User.objects.create(name="John", login="john", password="password")
+    session = client.session
+    session["user_login"] = user.login
+    session.save()
+
+    response = client.get(reverse("reservation-list"))
+
+    assert "You have no reservations." in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_reservation_list_shows_only_logged_in_users_reservations(client):
+    user = User.objects.create(name="John", login="john", password="password")
+    other_user = User.objects.create(name="Jane", login="jane", password="password")
     table = RestaurantTable.objects.create(number=1, capacity=4)
     Reservation.objects.create(
         user=user,
@@ -293,9 +347,31 @@ def test_reservation_list_returns_reservations(client):
         start_time=time(18, 0),
         end_time=time(20, 0),
     )
+    Reservation.objects.create(
+        user=other_user,
+        table=table,
+        guest_count=3,
+        date=date(2026, 7, 24),
+        start_time=time(19, 0),
+        end_time=time(21, 0),
+    )
+    Reservation.objects.create(
+        user=user,
+        table=table,
+        guest_count=4,
+        date=date(2026, 7, 24),
+        start_time=time(17, 0),
+        end_time=time(19, 0),
+    )
+    session = client.session
+    session["user_login"] = user.login
+    session.save()
 
     response = client.get(reverse("reservation-list"))
 
     assert response.status_code == 200
-    assert response["Content-Type"].startswith("text/plain")
-    assert "John, 2 people, Table 1 (4 seats)" in response.content.decode()
+    assert response["Content-Type"].startswith("text/html")
+    content = response.content.decode()
+    assert "John, 2 people, Table 1 (4 seats)" in content
+    assert "Jane, 3 people, Table 1 (4 seats)" not in content
+    assert content.index("John, 4 people") < content.index("John, 2 people")
