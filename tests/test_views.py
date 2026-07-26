@@ -145,6 +145,130 @@ def test_home_loads_the_responsive_stylesheet(client):
 
 
 @pytest.mark.django_db
+def test_home_configures_htmx_availability_updates(client):
+    response = client.get(reverse("home"))
+    content = response.content.decode()
+    form = response.context["form"]
+
+    assert 'src="/static/RestaurantApp/htmx.min.js"' in content
+    assert "X-CSRFToken" in content
+    for field_name in ("guest_count", "date", "timeslot"):
+        widget_attrs = form.fields[field_name].widget.attrs
+        assert widget_attrs["hx-post"] == reverse("reservation-availability")
+        assert widget_attrs["hx-target"] == "#availability-result"
+    assert '<div id="availability-result"></div>' in content
+
+
+@pytest.mark.django_db
+def test_availability_returns_guidance_when_required_inputs_are_missing(client):
+    response = client.post(
+        reverse("reservation-availability"),
+        {"guest_count": 2},
+        HTTP_HX_REQUEST="true",
+    )
+
+    assert response.status_code == 200
+    assert "Enter the number of guests, date, and timeslot to check availability." in (
+        response.content.decode()
+    )
+
+
+@pytest.mark.django_db
+def test_availability_rejects_get_requests(client):
+    response = client.get(reverse("reservation-availability"))
+
+    assert response.status_code == 405
+
+
+@pytest.mark.django_db
+def test_availability_reports_when_the_requested_timeslot_is_available(client):
+    RestaurantTable.objects.create(number=1, capacity=2)
+
+    response = client.post(
+        reverse("reservation-availability"),
+        {
+            "guest_count": 2,
+            "date": timezone.localdate() + timedelta(days=1),
+            "timeslot": "11:00",
+        },
+        HTTP_HX_REQUEST="true",
+    )
+
+    assert response.status_code == 200
+    assert "This timeslot is available." in response.content.decode()
+    assert not Reservation.objects.exists()
+
+
+@pytest.mark.django_db
+def test_availability_suggests_the_nearest_available_timeslot(client):
+    user = User.objects.create(name="Alice", login="alice", password="hash")
+    table = RestaurantTable.objects.create(number=1, capacity=2)
+    reservation_date = timezone.localdate() + timedelta(days=1)
+    Reservation.objects.create(
+        user=user,
+        table=table,
+        guest_count=2,
+        date=reservation_date,
+        start_time=time(11, 0),
+        end_time=time(12, 0),
+        status="confirmed",
+    )
+
+    response = client.post(
+        reverse("reservation-availability"),
+        {"guest_count": 2, "date": reservation_date, "timeslot": "11:00"},
+        HTTP_HX_REQUEST="true",
+    )
+
+    assert response.status_code == 200
+    assert "Try 12:00 instead." in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_availability_reports_when_the_day_is_fully_booked(client):
+    user = User.objects.create(name="Alice", login="alice", password="hash")
+    table = RestaurantTable.objects.create(number=1, capacity=2)
+    reservation_date = timezone.localdate() + timedelta(days=1)
+    for hour in range(11, 21):
+        Reservation.objects.create(
+            user=user,
+            table=table,
+            guest_count=2,
+            date=reservation_date,
+            start_time=time(hour, 0),
+            end_time=time(hour + 1, 0),
+            status="confirmed",
+        )
+
+    response = client.post(
+        reverse("reservation-availability"),
+        {"guest_count": 2, "date": reservation_date, "timeslot": "11:00"},
+        HTTP_HX_REQUEST="true",
+    )
+
+    assert response.status_code == 200
+    assert "This day is fully booked." in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_availability_returns_a_validation_message_for_an_invalid_date(client):
+    RestaurantTable.objects.create(number=1, capacity=2)
+
+    response = client.post(
+        reverse("reservation-availability"),
+        {
+            "guest_count": 2,
+            "date": timezone.localdate() + timedelta(days=15),
+            "timeslot": "11:00",
+        },
+        HTTP_HX_REQUEST="true",
+    )
+
+    assert response.status_code == 200
+    assert "Reservations can only be made within 14 days." in response.content.decode()
+
+
+@pytest.mark.django_db
 def test_table_list_returns_restaurant_tables(client):
     RestaurantTable.objects.create(number=1, capacity=2)
     RestaurantTable.objects.create(number=2, capacity=4)

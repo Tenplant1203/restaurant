@@ -28,4 +28,7 @@ urlpatterns = [
     path("register/", views.register, name="register"),
     path("tables/", views.table_list, name="table-list"),
     path("reservations/", views.reservation_list, name="reservation-list"),
+    path(
+        "availability/", views.reservation_availability, name="reservation-availability"
+    ),
 ]

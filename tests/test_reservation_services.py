@@ -1,6 +1,7 @@
-from datetime import date, datetime, time
+from datetime import date, datetime, time, timedelta
 
 import pytest
+from django.utils import timezone
 
 from RestaurantApp.models import Reservation, RestaurantTable, Status, User
 from RestaurantApp.services import (
@@ -80,18 +81,19 @@ def test_create_confirmed_reservation_saves_the_reservation():
 def test_find_nearest_available_timeslot_suggests_the_closest_slot():
     user = User.objects.create(name="Alice", login="alice", password="hash")
     table = RestaurantTable.objects.create(number=1, capacity=2)
+    reservation_date = timezone.localdate() + timedelta(days=1)
     Reservation.objects.create(
         user=user,
         table=table,
         guest_count=2,
-        date=date(2026, 7, 25),
+        date=reservation_date,
         start_time=time(11, 0),
         end_time=time(12, 0),
         status=Status.CONFIRMED,
     )
 
     suggestion = find_nearest_available_timeslot(
-        reservation_date=date(2026, 7, 25), requested_timeslot="11:00", guest_count=2
+        reservation_date=reservation_date, requested_timeslot="11:00", guest_count=2
     )
 
     assert suggestion == "12:00"

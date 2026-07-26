@@ -36,6 +36,10 @@ This app allows the user to book a table in a restaurant.
 - If the requested timeslot is unavailable, the system suggests the closest
   available timeslot on the same day. If the day is fully booked, it displays
   a full-booked message.
+- When the user changes the guest count, date, or timeslot, the reservation
+  form updates the availability message without reloading the page. The
+  message indicates availability, suggests a nearby timeslot, or reports that
+  the selected day is fully booked.
 - Registered users can log in. Their name is populated from the session and
   cannot be changed in the reservation form. Guests enter a name for each
   reservation.

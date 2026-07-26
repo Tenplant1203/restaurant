@@ -11,6 +11,7 @@ creation.
 | `/tables/` | `GET` | None | None | Plain-text list of restaurant tables, or a message when no tables exist. |
 | `/reservations/` | `GET` | None | None | Plain-text list of reservations, or a message when no reservations exist. |
 | `/reservations/` | `POST` | None | Reservation form data | Creates a confirmed reservation or redisplays the form with an error or alternative timeslot. |
+| `/availability/` | `POST` | None | Guest count, date, and timeslot | Returns an HTML fragment describing availability; does not create a reservation. |
 | `/register/` | `GET`, `POST` | None | Registration form data on `POST` | Displays registration form; creates a user, logs the user in, and redirects home on success. |
 | `/login/` | `GET`, `POST` | None | Login form data on `POST` | Displays login form; stores the user's login in the session and redirects home on success. |
 | `/logout/` | `POST` | None | None | Removes the logged-in user from the session and redirects home. |
@@ -25,6 +26,15 @@ The application uses Django templates for page structure and an external
 static CSS file for presentation. The shared base template loads the stylesheet
 and provides a responsive viewport; the CSS keeps the navigation and forms
 readable on desktop and mobile screens.
+
+The reservation form uses HTMX for one progressive-enhancement interaction.
+Changing the guest count, date, or timeslot sends a `POST` request to
+`/availability/`, which returns an HTML fragment for `#availability-result`.
+The fragment is rendered from `availability_result.html` and reports input
+guidance, validation errors, availability, a nearby available timeslot, or a
+fully booked day. The normal form `POST` to `/reservations/` remains the only
+operation that creates a reservation. The base template loads `htmx.min.js`
+and sets the `X-CSRFToken` header for HTMX requests.
 
 ## Database
 
