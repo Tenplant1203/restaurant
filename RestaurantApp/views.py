@@ -156,10 +156,21 @@ def reservation_list(request):
         messages.success(request, "Reservation completed successfully.")
         return redirect("home")
 
-    reservations = Reservation.objects.all()
-    reservation_details = "\n".join(str(reservation) for reservation in reservations)
-    return HttpResponse(
-        reservation_details or "No reservations available.", content_type="text/plain"
+    user_login = request.session.get("user_login")
+    if not user_login:
+        return redirect("login")
+
+    user = User.objects.filter(login=user_login).first()
+    if user is None:
+        return redirect("login")
+
+    reservations = Reservation.objects.filter(user=user).order_by(
+        "-date", "-start_time"
+    )
+    return render(
+        request,
+        "RestaurantApp/reservations.html",
+        {"reservations": reservations, "logged_in_user": user},
     )
 
 
