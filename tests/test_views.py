@@ -8,6 +8,11 @@ from django.utils import timezone
 from RestaurantApp.models import Reservation, RestaurantTable, User
 
 
+@pytest.fixture(autouse=True)
+def clear_initial_restaurant_tables(db):
+    RestaurantTable.objects.all().delete()
+
+
 @pytest.mark.django_db
 def test_register_creates_a_user_hashes_password_and_logs_in(client):
     response = client.post(

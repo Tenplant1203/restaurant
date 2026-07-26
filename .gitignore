@@ -3,5 +3,6 @@ db.sqlite3
 **/__pycache__/**
 .pytest_cache/**
 static-prod/**
+staticfiles/
 .coverage
 log/**

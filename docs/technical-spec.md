@@ -42,7 +42,19 @@ and sets the `X-CSRFToken` header for HTMX requests.
 
 ## Database
 
-The project uses Django ORM with SQLite for local development.
+The project uses Django ORM with SQLite for local development. In Render
+production, `DATABASE_URL` configures a Render PostgreSQL database.
+
+## Deployment
+
+The production deployment uses a Render Web Service with Waitress as the WSGI
+application server. WhiteNoise serves collected static files. Render provides
+`RENDER` and `RENDER_EXTERNAL_HOSTNAME`; the application uses them to disable
+debug mode and configure allowed hosts. `SECRET_KEY` and `DATABASE_URL` are
+managed as Render environment variables.
+
+The application has no uploaded files or images, so media-file storage is not
+configured.
 
 ## Models
 
@@ -85,7 +97,9 @@ Reservations created through the reservation form have the `confirmed` status.
 
 Each model has a `__str__()` method for readable output in the Django admin.
 
-## Migration
+## Migrations
 
 The initial database schema is stored in
-`RestaurantApp/migrations/0001_initial.py`.
+`RestaurantApp/migrations/0001_initial.py`. The data migration
+`RestaurantApp/migrations/0002_create_initial_restaurant_tables.py` creates 20
+restaurant tables: four each with capacities 2, 4, 6, 8, and 10.

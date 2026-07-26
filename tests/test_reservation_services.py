@@ -13,6 +13,11 @@ from RestaurantApp.services import (
 )
 
 
+@pytest.fixture(autouse=True)
+def clear_initial_restaurant_tables(db):
+    RestaurantTable.objects.all().delete()
+
+
 @pytest.mark.django_db
 def test_find_available_table_selects_the_smallest_suitable_table():
     RestaurantTable.objects.create(number=1, capacity=4)

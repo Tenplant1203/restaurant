@@ -38,6 +38,7 @@ reservation flow can request the necessary name or contact information.
 - Python 3.11+
 - Django 5
 - SQLite for local development
+- PostgreSQL for Render production deployment
 - uv for dependency and virtual-environment management
 - pytest and pytest-django for testing
 - coverage.py for test coverage
@@ -58,28 +59,22 @@ Install the project dependencies with uv:
 uv sync
 ```
 
-Activate the virtual environment:
-
-```bash
-source .venv/bin/activate
-```
-
 Apply the database migrations:
 
 ```bash
-python manage.py migrate
+uv run python manage.py migrate
 ```
 
 Check the Django project configuration:
 
 ```bash
-python manage.py check
+uv run python manage.py check
 ```
 
 ## Run the development server
 
 ```bash
-python manage.py runserver
+uv run python manage.py runserver
 ```
 
 Then open <http://127.0.0.1:8000/> in a browser.
@@ -89,20 +84,20 @@ Then open <http://127.0.0.1:8000/> in a browser.
 Run the test suite:
 
 ```bash
-pytest
+uv run pytest
 ```
 
 Run the test suite with coverage:
 
 ```bash
-coverage run -m pytest
-coverage report
+uv run coverage run -m pytest
+uv run coverage report
 ```
 
 Generate an HTML coverage report if needed:
 
 ```bash
-coverage html
+uv run coverage html
 ```
 
 ## Code quality
@@ -110,11 +105,43 @@ coverage html
 Check formatting with Black:
 
 ```bash
-black --check .
+uv run black --fast --check .
 ```
 
 Run Pylint on the Django project and application:
 
 ```bash
-pylint Restaurant RestaurantApp
+uv run pylint Restaurant RestaurantApp
 ```
+
+## Render deployment
+
+The production deployment uses Render Web Service, Render PostgreSQL,
+Waitress, and WhiteNoise. Production reservations use PostgreSQL through the
+`DATABASE_URL` environment variable; local development continues to use
+SQLite when that variable is not set.
+
+### Environment variables
+
+Set the following values in the Render Web Service settings:
+
+- `SECRET_KEY`: generate a secret value in Render.
+- `DATABASE_URL`: the internal connection URL of the Render PostgreSQL database.
+
+Render automatically provides `RENDER` and `RENDER_EXTERNAL_HOSTNAME`.
+The application uses them to set `DEBUG=False` and `ALLOWED_HOSTS` in
+production.
+
+### Render commands
+
+Create a PostgreSQL database and Web Service in the Render dashboard, then
+configure these commands for the Web Service:
+
+```text
+Build Command: uv sync --frozen && uv run python manage.py migrate && uv run python manage.py collectstatic --noinput
+Start Command: uv run waitress-serve --host=0.0.0.0 --port=$PORT Restaurant.wsgi:application
+```
+
+The `0002_create_initial_restaurant_tables` data migration creates the 20
+restaurant tables when `uv run python manage.py migrate` runs. The application
+does not use uploaded files or images, so no media-file storage is configured.

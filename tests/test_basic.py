@@ -4,6 +4,11 @@ from django.test import TestCase
 from RestaurantApp.models import User, Reservation, RestaurantTable
 
 
+@pytest.fixture(autouse=True)
+def clear_initial_restaurant_tables(db):
+    RestaurantTable.objects.all().delete()
+
+
 @pytest.mark.django_db
 def test_create_data():
     user = User(name="John", login="jonny", password="jpass")
