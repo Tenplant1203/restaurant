@@ -51,7 +51,9 @@ The production deployment uses a Render Web Service with Waitress as the WSGI
 application server. WhiteNoise serves collected static files. Render provides
 `RENDER` and `RENDER_EXTERNAL_HOSTNAME`; the application uses them to disable
 debug mode and configure allowed hosts. `SECRET_KEY` and `DATABASE_URL` are
-managed as Render environment variables.
+managed as Render environment variables. Render terminates HTTPS, so production
+settings trust its `X-Forwarded-Proto: https` header to retain the request
+scheme for CSRF validation.
 
 The application has no uploaded files or images, so media-file storage is not
 configured.

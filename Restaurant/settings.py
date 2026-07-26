@@ -36,6 +36,9 @@ DEBUG = not bool(os.environ.get("RENDER"))
 
 ALLOWED_HOSTS = [os.environ["RENDER_EXTERNAL_HOSTNAME"]] if not DEBUG else []
 
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 
 # Application definition
 
