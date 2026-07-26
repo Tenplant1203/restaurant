@@ -1,6 +1,7 @@
 from datetime import time, timedelta
 
 from django import forms
+from django.urls import reverse
 from django.utils import timezone
 
 from RestaurantApp.models import User
@@ -39,20 +40,10 @@ class LoginForm(forms.Form):
     password = forms.CharField(max_length=255, widget=forms.PasswordInput)
 
 
-class ReservationForm(forms.Form):
-    name = forms.CharField(max_length=20)
-    guest_count = forms.IntegerField(min_value=1)
-    date = forms.DateField(widget=forms.DateInput(attrs={"type": "date"}))
-    timeslot = forms.ChoiceField(choices=TIME_SLOTS)
-
-    def __init__(self, *args, max_capacity, user=None, **kwargs):
+class ReservationAvailabilityValidationMixin:
+    def __init__(self, *args, max_capacity, **kwargs):
         super().__init__(*args, **kwargs)
         self.max_capacity = max_capacity
-        self.user = user
-
-        if user is not None:
-            self.fields["name"].initial = user.name
-            self.fields["name"].widget.attrs["readonly"] = True
 
     def clean_guest_count(self):
         guest_count = self.cleaned_data["guest_count"]
@@ -81,3 +72,32 @@ class ReservationForm(forms.Form):
                 self.add_error("timeslot", "This timeslot has already started.")
 
         return cleaned_data
+
+
+class AvailabilityForm(ReservationAvailabilityValidationMixin, forms.Form):
+    guest_count = forms.IntegerField(min_value=1)
+    date = forms.DateField(widget=forms.DateInput(attrs={"type": "date"}))
+    timeslot = forms.ChoiceField(choices=TIME_SLOTS)
+
+
+class ReservationForm(ReservationAvailabilityValidationMixin, forms.Form):
+    name = forms.CharField(max_length=20)
+    guest_count = forms.IntegerField(min_value=1)
+    date = forms.DateField(widget=forms.DateInput(attrs={"type": "date"}))
+    timeslot = forms.ChoiceField(choices=TIME_SLOTS)
+
+    def __init__(self, *args, max_capacity, user=None, **kwargs):
+        super().__init__(*args, max_capacity=max_capacity, **kwargs)
+        self.user = user
+
+        for field_name in ("guest_count", "date", "timeslot"):
+            self.fields[field_name].widget.attrs.update(
+                {
+                    "hx-post": reverse("reservation-availability"),
+                    "hx-target": "#availability-result",
+                }
+            )
+
+        if user is not None:
+            self.fields["name"].initial = user.name
+            self.fields["name"].widget.attrs["readonly"] = True

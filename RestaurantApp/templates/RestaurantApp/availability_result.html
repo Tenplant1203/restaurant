@@ -1,0 +1,9 @@
+{% if errors %}
+  {% for field_errors in errors.values %}
+    {% for error in field_errors %}
+      <p>{{ error }}</p>
+    {% endfor %}
+  {% endfor %}
+{% else %}
+  <p>{{ message }}</p>
+{% endif %}

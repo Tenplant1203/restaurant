@@ -2,8 +2,14 @@ from django.contrib import messages
 from django.contrib.auth.hashers import check_password, make_password
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.views.decorators.http import require_POST
 
-from RestaurantApp.forms import LoginForm, RegistrationForm, ReservationForm
+from RestaurantApp.forms import (
+    AvailabilityForm,
+    LoginForm,
+    RegistrationForm,
+    ReservationForm,
+)
 from RestaurantApp.models import Reservation, RestaurantTable, User
 from RestaurantApp.services import (
     ReservationDetails,
@@ -29,6 +35,59 @@ def home(request):
         request,
         "RestaurantApp/home.html",
         {"form": form, "user": user, "logged_in_user": user},
+    )
+
+
+@require_POST
+def reservation_availability(request):
+    max_capacity = (
+        RestaurantTable.objects.order_by("-capacity")
+        .values_list("capacity", flat=True)
+        .first()
+        or 0
+    )
+    required_fields = ("guest_count", "date", "timeslot")
+    if not all(request.POST.get(field) for field in required_fields):
+        return render(
+            request,
+            "RestaurantApp/availability_result.html",
+            {
+                "message": (
+                    "Enter the number of guests, date, and timeslot to check availability."
+                )
+            },
+        )
+
+    form = AvailabilityForm(request.POST, max_capacity=max_capacity)
+    if not form.is_valid():
+        return render(
+            request,
+            "RestaurantApp/availability_result.html",
+            {"errors": form.errors},
+        )
+
+    start_time, end_time = timeslot_bounds(form.cleaned_data["timeslot"])
+    table = find_available_table(
+        form.cleaned_data["date"],
+        start_time,
+        end_time,
+        form.cleaned_data["guest_count"],
+    )
+    if table:
+        message = "This timeslot is available."
+    else:
+        suggestion = find_nearest_available_timeslot(
+            form.cleaned_data["date"],
+            form.cleaned_data["timeslot"],
+            form.cleaned_data["guest_count"],
+        )
+        message = (
+            f"Try {suggestion} instead." if suggestion else "This day is fully booked."
+        )
+    return render(
+        request,
+        "RestaurantApp/availability_result.html",
+        {"message": message},
     )
 
 
