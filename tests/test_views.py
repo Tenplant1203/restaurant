@@ -52,6 +52,20 @@ def test_login_get_renders_the_login_form(client):
 
 
 @pytest.mark.django_db
+@pytest.mark.parametrize("url_name", ["login", "register"])
+def test_login_and_register_keep_logged_in_navigation(client, url_name):
+    user = User.objects.create(name="Alice", login="alice", password="hash")
+    session = client.session
+    session["user_login"] = user.login
+    session.save()
+
+    response = client.get(reverse(url_name))
+
+    assert 'href="/reservations/">Reservations</a>' in response.content.decode()
+    assert 'action="/logout/"' in response.content.decode()
+
+
+@pytest.mark.django_db
 def test_logout_removes_the_login_session(client):
     session = client.session
     session["user_login"] = "alice"

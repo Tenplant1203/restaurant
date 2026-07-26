@@ -175,9 +175,17 @@ def reservation_list(request):
 
 
 def register(request):
+    user_login = request.session.get("user_login")
+    logged_in_user = (
+        User.objects.filter(login=user_login).first() if user_login else None
+    )
     form = RegistrationForm(request.POST or None)
     if request.method != "POST":
-        return render(request, "RestaurantApp/register.html", {"form": form})
+        return render(
+            request,
+            "RestaurantApp/register.html",
+            {"form": form, "logged_in_user": logged_in_user},
+        )
     if form.is_valid():
         user = User.objects.create(
             name=form.cleaned_data["name"],
@@ -188,13 +196,26 @@ def register(request):
         messages.success(request, "Registration completed successfully.")
         return redirect("home")
 
-    return render(request, "RestaurantApp/register.html", {"form": form}, status=400)
+    return render(
+        request,
+        "RestaurantApp/register.html",
+        {"form": form, "logged_in_user": logged_in_user},
+        status=400,
+    )
 
 
 def login(request):
+    user_login = request.session.get("user_login")
+    logged_in_user = (
+        User.objects.filter(login=user_login).first() if user_login else None
+    )
     form = LoginForm(request.POST or None)
     if request.method != "POST":
-        return render(request, "RestaurantApp/login.html", {"form": form})
+        return render(
+            request,
+            "RestaurantApp/login.html",
+            {"form": form, "logged_in_user": logged_in_user},
+        )
 
     user = User.objects.filter(login=form.data.get("login")).first()
     if (
@@ -207,7 +228,12 @@ def login(request):
         return redirect("home")
 
     form.add_error(None, "Login or password is incorrect.")
-    return render(request, "RestaurantApp/login.html", {"form": form}, status=400)
+    return render(
+        request,
+        "RestaurantApp/login.html",
+        {"form": form, "logged_in_user": logged_in_user},
+        status=400,
+    )
 
 
 def logout(request):
