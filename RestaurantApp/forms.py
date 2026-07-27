@@ -1,6 +1,7 @@
 from datetime import time, timedelta
 
 from django import forms
+from django.contrib.auth.password_validation import validate_password
 from django.urls import reverse
 from django.utils import timezone
 
@@ -23,6 +24,11 @@ class RegistrationForm(forms.Form):
         if User.objects.filter(login=login).exists():
             raise forms.ValidationError("This login is already in use.")
         return login
+
+    def clean_password(self):
+        password = self.cleaned_data["password"]
+        validate_password(password)
+        return password
 
     def clean(self):
         cleaned_data = super().clean()

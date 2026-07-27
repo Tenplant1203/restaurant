@@ -53,6 +53,13 @@ and application tests are being developed incrementally.
 
 ## Setup
 
+Clone the repository and move into the project directory:
+
+```bash
+git clone https://github.com/Tenplant1203/restaurant.git
+cd restaurant
+```
+
 Install the project dependencies with uv:
 
 ```bash

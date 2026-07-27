@@ -36,6 +36,20 @@ def test_registration_form_rejects_an_existing_login(db):
     assert "login" in form.errors
 
 
+def test_registration_form_rejects_a_numeric_password(db):
+    form = RegistrationForm(
+        {
+            "name": "Alice",
+            "login": "alice",
+            "password": "12345678",
+            "password_confirmation": "12345678",
+        }
+    )
+
+    assert not form.is_valid()
+    assert "password" in form.errors
+
+
 def test_reservation_form_rejects_a_date_more_than_fourteen_days_away():
     form = ReservationForm(
         {

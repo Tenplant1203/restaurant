@@ -1,14 +1,21 @@
 {% extends "RestaurantApp/base.html" %}
 
 {% block main %}
-  <h2>Your Reservations</h2>
-  {% if reservations %}
-    <ul>
-      {% for reservation in reservations %}
-        <li>{{ reservation }}</li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>You have no reservations.</p>
-  {% endif %}
+  <section class="reservations-page">
+    <p class="eyebrow">Your dining plans</p>
+    <h1>My reservations</h1>
+    {% if reservations %}
+      <ul class="reservation-list">
+        {% for reservation in reservations %}
+          <li>{{ reservation }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="empty-state">
+        <h2>No reservations yet</h2>
+        <p>When you are ready, reserve a table for your next meal.</p>
+        <a class="button-link" href="{% url 'home' %}">Reserve a table</a>
+      </div>
+    {% endif %}
+  </section>
 {% endblock %}

@@ -1,14 +1,29 @@
 {% extends "RestaurantApp/base.html" %}
 
 {% block main %}
-  <h2>New Reservation</h2>
-  <form
-    method="post"
-    action="{% url 'reservation-list' %}"
-  >
-    {% csrf_token %}
-    {{ form.as_p }}
-    <div id="availability-result"></div>
-    <button type="submit">Reserve</button>
-  </form>
+  <section class="app-shell">
+    <div class="page-intro">
+      <div>
+        <p class="eyebrow">Fancy Restaurant</p>
+        <h1>Reserve your table</h1>
+        <p>Pick a date and time. We will show availability instantly.</p>
+      </div>
+      <div class="status-chip"><span aria-hidden="true"></span> Open today · 11:00–21:00</div>
+    </div>
+
+    <section class="booking-card">
+      <div class="booking-card-header">
+        <div>
+          <h2>New reservation</h2>
+          <p>Complete the details below to find a table.</p>
+        </div>
+      </div>
+      <form class="reservation-form" method="post" action="{% url 'reservation-list' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div id="availability-result" aria-live="polite"></div>
+        <button type="submit">Reserve a table <span aria-hidden="true">→</span></button>
+      </form>
+    </section>
+  </section>
 {% endblock %}
