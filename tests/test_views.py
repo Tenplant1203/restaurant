@@ -66,7 +66,7 @@ def test_login_and_register_keep_logged_in_navigation(client, url_name):
 
     response = client.get(reverse(url_name))
 
-    assert 'href="/reservations/">Reservations</a>' in response.content.decode()
+    assert 'href="/reservations/">My reservations</a>' in response.content.decode()
     assert 'action="/logout/"' in response.content.decode()
 
 
@@ -143,12 +143,16 @@ def test_reservation_post_creates_a_confirmed_reservation_for_a_guest(client):
 @pytest.mark.django_db
 def test_home_renders_the_reservation_form(client):
     response = client.get(reverse("home"))
+    content = response.content.decode()
 
     assert response.status_code == 200
     assert response["Content-Type"].startswith("text/html")
-    assert "Fancy Restaurant" in response.content.decode()
-    assert "New Reservation" in response.content.decode()
-    assert reverse("table-list") not in response.content.decode()
+    assert "Fancy Restaurant" in content
+    assert "New reservation" in content
+    assert '<section class="app-shell">' in content
+    assert '<section class="booking-card">' in content
+    assert 'button type="submit">Reserve a table' in content
+    assert reverse("table-list") not in content
 
 
 @pytest.mark.django_db
@@ -175,7 +179,7 @@ def test_home_configures_htmx_availability_updates(client):
         widget_attrs = form.fields[field_name].widget.attrs
         assert widget_attrs["hx-post"] == reverse("reservation-availability")
         assert widget_attrs["hx-target"] == "#availability-result"
-    assert '<div id="availability-result"></div>' in content
+    assert 'id="availability-result"' in content
 
 
 @pytest.mark.django_db
@@ -324,7 +328,7 @@ def test_home_shows_reservations_navigation_for_logged_in_users(client):
 
     response = client.get(reverse("home"))
 
-    assert 'href="/reservations/">Reservations</a>' in response.content.decode()
+    assert 'href="/reservations/">My reservations</a>' in response.content.decode()
 
 
 @pytest.mark.django_db
@@ -336,7 +340,7 @@ def test_reservation_list_shows_an_empty_message(client):
 
     response = client.get(reverse("reservation-list"))
 
-    assert "You have no reservations." in response.content.decode()
+    assert "No reservations yet" in response.content.decode()
 
 
 @pytest.mark.django_db

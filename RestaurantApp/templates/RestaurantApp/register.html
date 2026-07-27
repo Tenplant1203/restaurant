@@ -1,10 +1,17 @@
 {% extends "RestaurantApp/base.html" %}
 
 {% block main %}
-  <h2>Register</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Register</button>
-  </form>
+  <section class="auth-layout">
+    <div class="auth-card">
+      <p class="eyebrow">Join us</p>
+      <h1>Create your account</h1>
+      <p class="auth-intro">Save time when you make your next reservation.</p>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create account</button>
+      </form>
+      <p class="auth-switch">Already have an account? <a href="{% url 'login' %}">Login</a>.</p>
+    </div>
+  </section>
 {% endblock %}

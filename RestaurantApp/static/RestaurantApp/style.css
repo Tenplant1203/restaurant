@@ -1,7 +1,8 @@
 :root {
-  font-family: Arial, sans-serif;
-  color: #1f2933;
-  background: #f7f7f7;
+  color: #172033;
+  background: #f5f7fb;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
 }
 
 * {
@@ -16,67 +17,238 @@ body {
   line-height: 1.5;
 }
 
-header,
-main,
-footer,
-.messages {
-  width: min(100% - 2rem, 960px);
+a {
+  color: inherit;
+}
+
+.site-shell,
+.site-main {
+  width: min(100% - 2rem, 1080px);
   margin: 0 auto;
 }
 
-header {
-  padding: 1.5rem 0;
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid #e5e8f0;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
 }
 
-h1,
-h2 {
-  margin-top: 0;
+.header-content,
+nav {
+  display: flex;
+  align-items: center;
+}
+
+.header-content {
+  min-height: 4.5rem;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #111827;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+}
+
+.brand-mark {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 0.7rem;
+  background: linear-gradient(135deg, #6d5dfc, #00b8d9);
+  color: #ffffff;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
 }
 
 nav {
-  display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem;
+  justify-content: flex-end;
+  gap: 0.45rem;
+  color: #556074;
+  font-size: 0.88rem;
+  font-weight: 650;
+}
+
+nav a,
+.text-button {
+  padding: 0.48rem 0.7rem;
+  border-radius: 0.55rem;
+  text-decoration: none;
+}
+
+nav a:hover,
+.text-button:hover {
+  background: #f0f2f8;
+  color: #172033;
 }
 
 nav form {
   margin: 0;
 }
 
-a,
-button {
-  color: #174a7c;
+.nav-cta {
+  background: #172033;
+  color: #ffffff;
 }
 
-button {
-  padding: 0.5rem 0.9rem;
-  border: 1px solid #174a7c;
-  border-radius: 0.25rem;
-  background: #ffffff;
+.nav-cta:hover {
+  background: #28344d;
+  color: #ffffff;
+}
+
+.text-button {
+  border: 0;
+  background: transparent;
+  color: #556074;
   font: inherit;
   cursor: pointer;
 }
 
-button:hover {
-  background: #e7f1fa;
+.user-greeting {
+  color: #7b8496;
+  font-weight: 500;
 }
 
-main {
+.site-main {
   flex: 1;
-  padding: 1.5rem 0 2rem;
+  padding: clamp(2.2rem, 6vw, 5rem) 0;
 }
 
-main form {
-  max-width: 32rem;
-  padding: 1.25rem;
-  border: 1px solid #b8c2cc;
-  border-radius: 0.5rem;
+.app-shell {
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.page-intro {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.55rem;
+  color: #6d5dfc;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.page-intro h1,
+.auth-card h1,
+.reservations-page > h1 {
+  margin: 0;
+  color: #172033;
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  letter-spacing: -0.055em;
+  line-height: 1.06;
+}
+
+.page-intro > div > p:last-child {
+  margin: 0.85rem 0 0;
+  color: #697386;
+  font-size: 1rem;
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #536077;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.status-chip {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #e3e8f0;
+  border-radius: 999px;
   background: #ffffff;
 }
 
+.status-chip span {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #12b76a;
+  box-shadow: 0 0 0 4px #dcfae6;
+}
+
+.booking-card,
+.auth-card,
+.reservations-page {
+  border: 1px solid #e3e8f0;
+  border-radius: 1.25rem;
+  background: #ffffff;
+  box-shadow: 0 16px 45px rgba(35, 46, 77, 0.08);
+}
+
+.booking-card {
+  overflow: hidden;
+}
+
+.booking-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1.75rem 1.75rem 1.4rem;
+  border-bottom: 1px solid #edf0f5;
+}
+
+.booking-card h2,
+.empty-state h2 {
+  margin: 0;
+  color: #172033;
+  font-size: 1.25rem;
+  letter-spacing: -0.025em;
+}
+
+.booking-card-header p,
+.auth-intro,
+.auth-switch,
+.empty-state p {
+  margin: 0.35rem 0 0;
+  color: #748096;
+  font-size: 0.9rem;
+}
+
+form {
+  font: inherit;
+}
+
+.reservation-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 1rem;
+  padding: 1.75rem;
+}
+
 form p {
-  margin: 0 0 1rem;
+  margin: 0 0 1.1rem;
+}
+
+.reservation-form p:first-of-type {
+  grid-column: 1 / -1;
+}
+
+.reservation-form p:last-of-type {
+  grid-column: 1 / -1;
 }
 
 label,
@@ -86,57 +258,195 @@ select {
 }
 
 label {
-  margin-bottom: 0.25rem;
-  font-weight: bold;
+  margin-bottom: 0.45rem;
+  color: #3d4960;
+  font-size: 0.84rem;
+  font-weight: 750;
 }
 
 input,
 select {
   width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #66788a;
-  border-radius: 0.25rem;
+  min-height: 2.85rem;
+  padding: 0.7rem 0.82rem;
+  border: 1px solid #d7ddea;
+  border-radius: 0.65rem;
+  background: #ffffff;
+  color: #172033;
   font: inherit;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+input:hover,
+select:hover {
+  border-color: #b9c3d5;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #6d5dfc;
+  box-shadow: 0 0 0 4px rgba(109, 93, 252, 0.14);
+}
+
+button,
+.button-link {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.85rem;
+  padding: 0.7rem 1rem;
+  border: 0;
+  border-radius: 0.65rem;
+  background: #6d5dfc;
+  box-shadow: 0 6px 14px rgba(109, 93, 252, 0.22);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 750;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+button:hover,
+.button-link:hover {
+  background: #5a49ed;
+  transform: translateY(-1px);
+}
+
+.reservation-form button,
+.reservation-form #availability-result {
+  grid-column: 1 / -1;
+}
+
+.reservation-form button {
+  margin-top: 0.2rem;
+}
+
+#availability-result {
+  min-height: 0;
+  margin-bottom: 1rem;
+  color: #536077;
+  font-size: 0.9rem;
 }
 
 .errorlist {
-  margin: 0.25rem 0 0;
-  padding-left: 1.25rem;
-  color: #9b1c1c;
+  margin: 0.45rem 0 0;
+  padding-left: 1.1rem;
+  color: #d92d20;
+  font-size: 0.82rem;
 }
 
 .messages {
-  margin-top: 1rem;
-  padding: 0.75rem 1.25rem;
-  border: 1px solid #b8c2cc;
-  border-radius: 0.25rem;
-  background: #ffffff;
+  margin: 1rem 0 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid #b7e8c9;
+  border-radius: 0.75rem;
+  background: #ecfdf3;
+  color: #067647;
+  font-size: 0.9rem;
+  font-weight: 650;
+  list-style: none;
 }
 
-footer {
+.auth-layout {
+  display: grid;
+  max-width: 28rem;
+  margin: 0 auto;
+}
+
+.auth-card,
+.reservations-page {
+  padding: clamp(1.4rem, 4vw, 2rem);
+}
+
+.auth-card .eyebrow,
+.reservations-page > .eyebrow {
+  color: #6d5dfc;
+}
+
+.auth-intro {
+  margin: 0.7rem 0 1.75rem;
+}
+
+.auth-card button {
+  width: 100%;
+}
+
+.auth-switch {
+  margin-top: 1.25rem;
+  text-align: center;
+}
+
+.auth-switch a {
+  color: #5a49ed;
+  font-weight: 750;
+}
+
+.reservation-list {
+  display: grid;
+  gap: 0.65rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reservation-list li {
+  padding: 1rem;
+  border: 1px solid #e6eaf1;
+  border-radius: 0.8rem;
+  background: #fafbff;
+  color: #3d4960;
+  font-size: 0.92rem;
+}
+
+.empty-state {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  border: 1px dashed #cbd3e1;
+  border-radius: 0.9rem;
+  background: #fafbff;
+}
+
+.site-footer {
   padding: 1.5rem 0;
-  border-top: 1px solid #b8c2cc;
+  border-top: 1px solid #e5e8f0;
+  color: #8a94a6;
+  font-size: 0.82rem;
 }
 
-@media (max-width: 600px) {
-  header,
-  main,
-  footer,
-  .messages {
-    width: min(100% - 1.5rem, 960px);
+@media (max-width: 680px) {
+  .site-shell,
+  .site-main {
+    width: min(100% - 1.25rem, 1080px);
   }
 
-  nav {
+  .header-content,
+  .page-intro,
+  .booking-card-header {
     align-items: flex-start;
     flex-direction: column;
   }
 
-  nav form,
-  nav button {
-    width: 100%;
+  .header-content {
+    padding: 0.75rem 0;
   }
 
-  main form {
-    max-width: none;
+  nav {
+    justify-content: flex-start;
+  }
+
+  .reservation-form {
+    grid-template-columns: 1fr;
+    padding: 1.25rem;
+  }
+
+  .reservation-form p:first-of-type {
+    grid-column: auto;
+  }
+
+  .booking-card-header {
+    padding: 1.25rem 1.25rem 1rem;
   }
 }

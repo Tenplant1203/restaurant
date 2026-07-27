@@ -5,37 +5,49 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Fancy Restaurant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'RestaurantApp/style.css' %}">
   <script src="{% static 'RestaurantApp/htmx.min.js' %}" defer></script>
 </head>
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-  <header>
-    <h1>Fancy Restaurant</h1>
-    <nav aria-label="Main navigation">
-      <a href="{% url 'home' %}">Home</a>
+  <header class="site-header">
+    <div class="site-shell header-content">
+      <a class="brand" href="{% url 'home' %}">
+        <span class="brand-mark" aria-hidden="true">FR</span>
+        <span>Fancy Restaurant</span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="{% url 'home' %}">Reserve a table</a>
       {% if logged_in_user %}
-        <a href="{% url 'reservation-list' %}">Reservations</a>
-        <span>Hi, {{ logged_in_user.name }}!</span>
+        <a href="{% url 'reservation-list' %}">My reservations</a>
+        <span class="user-greeting">Hi, {{ logged_in_user.name }}</span>
         <form method="post" action="{% url 'logout' %}">
           {% csrf_token %}
-          <button type="submit">Logout</button>
+          <button class="text-button" type="submit">Logout</button>
         </form>
       {% else %}
         <a href="{% url 'login' %}">Login</a>
-        <a href="{% url 'register' %}">Register</a>
+        <a class="nav-cta" href="{% url 'register' %}">Create account</a>
       {% endif %}
-    </nav>
+      </nav>
+    </div>
   </header>
   {% if messages %}
-    <ul class="messages">
-      {% for message in messages %}
-        <li>{{ message }}</li>
-      {% endfor %}
-    </ul>
+    <div class="site-shell">
+      <ul class="messages">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    </div>
   {% endif %}
-  <main>
+  <main class="site-main">
     {% block main %}{% endblock %}
   </main>
-  <footer>Fancy Restaurant</footer>
+  <footer class="site-footer">
+    <div class="site-shell">Fancy Restaurant <span aria-hidden="true">·</span> Reservations made simple</div>
+  </footer>
 </body>
 </html>
